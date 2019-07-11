@@ -10,11 +10,11 @@
 
 "use strict";
 
-const Curation = require("./curation"),
-  Order = require("./order"),
-  Response = require("./response"),
-  Care = require("./care"),
-  Survey = require("./survey"),
+const Response = require("./response"),
+  // Care = require("./care"),
+  // Survey = require("./survey"),
+  // Curation = require("./curation"),
+  // Order = require("./order"),
   GraphAPi = require("./graph-api"),
   i18n = require("../i18n.config");
 
@@ -83,14 +83,7 @@ module.exports = class Receive {
       message.includes("start over")
     ) {
       response = Response.genNuxMessage(this.user);
-    } else if (Number(message)) {
-      response = Order.handlePayload("ORDER_NUMBER");
-    } else if (message.includes("#")) {
-      response = Survey.handlePayload("CSAT_SUGGESTION");
-    } else if (message.includes(i18n.__("care.help").toLowerCase())) {
-      let care = new Care(this.user, this.webhookEvent);
-      response = care.handlePayload("CARE_HELP");
-    } else {
+    }  else {
       response = [
         Response.genText(
           i18n.__("fallback.any", {
@@ -181,21 +174,18 @@ module.exports = class Receive {
       payload === "GITHUB"
     ) {
       response = Response.genNuxMessage(this.user);
-    } else if (payload.includes("CURATION") || payload.includes("COUPON")) {
-      let curation = new Curation(this.user, this.webhookEvent);
-      response = curation.handlePayload(payload);
-    } else if (payload.includes("CARE")) {
-      let care = new Care(this.user, this.webhookEvent);
-      response = care.handlePayload(payload);
-    } else if (payload.includes("ORDER")) {
-      response = Order.handlePayload(payload);
-    } else if (payload.includes("CSAT")) {
-      response = Survey.handlePayload(payload);
     } else {
       response = {
         text: `This is a default postback message for payload: ${payload}!`
       };
     }
+
+    // else if (payload.includes("CARE")) {
+    //   let care = new Care(this.user, this.webhookEvent);
+    //   response = care.handlePayload(payload);
+    // } else if (payload.includes("ORDER")) {
+    //   response = Order.handlePayload(payload);
+    // }
 
     return response;
   }

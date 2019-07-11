@@ -119,7 +119,7 @@ module.exports = class GraphAPi {
   static async getUserProfile(senderPsid) {
     try {
       const userProfile = await this.callUserProfileAPI(senderPsid);
-
+      
       for (const key in userProfile) {
         const camelizedKey = camelCase(key);
         const value = userProfile[key];
